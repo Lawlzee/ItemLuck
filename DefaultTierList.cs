@@ -20,8 +20,7 @@ public class DefaultTierList
     {
         List<Rank<ItemDef>> items = new List<Rank<ItemDef>>
         {
-            // White - 
-
+            // White -
             new(RoR2Content.Items.Hoof, Tier.S),//White - Paul's Goat Hoof 
             new(RoR2Content.Items.CritGlasses, Tier.S),//White - Lens-Maker's Glasses 
             new(RoR2Content.Items.SprintBonus, Tier.S),//White - Energy Drink 
@@ -53,7 +52,6 @@ public class DefaultTierList
             new(RoR2Content.Items.FlatHealth, Tier.F),//White - Bison Steak 
             
             // Green - https://www.youtube.com/watch?v=9hmB2DvxRGg
-            
             new(RoR2Content.Items.Feather, Tier.S),//Green - Hopoo Feather 
             new(RoR2Content.Items.IceRing, Tier.S),//Green - Runald's Band 
             new(RoR2Content.Items.FireRing, Tier.S),//Green - Kjaro's Band 
@@ -85,9 +83,7 @@ public class DefaultTierList
             new(RoR2Content.Items.Seed, Tier.F),//Green - Leeching Seed 
             new(RoR2Content.Items.TPHealingNova, Tier.F),//Green - Lepton Daisy 
 
-            
             // Void - https://www.youtube.com/watch?v=s-UDQvmpvbY
-            
             new(DLC1Content.Items.TreasureCacheVoid, Tier.S),//Void White - Encrusted Key 
             new(DLC1Content.Items.BearVoid, Tier.S),//Void White - Safer Spaces 
             new(DLC1Content.Items.ChainLightningVoid, Tier.S),//Void Green - Polylute 
@@ -104,26 +100,25 @@ public class DefaultTierList
             new(DLC1Content.Items.ElementalRingVoid, Tier.F),//Void Green - Singularity Band 
 
             // Lunar - https://www.youtube.com/watch?v=ldc8PT054Bw
-            
             new(RoR2Content.Items.ShieldOnly, Tier.S),//Lunar - Transcendence 
             new(RoR2Content.Items.AutoCastEquipment, Tier.S),//Lunar - Gesture of the Drowned 
             new(RoR2Content.Items.LunarSpecialReplacement, Tier.S),//Lunar - Essence of Heresy 
             new(RoR2Content.Items.LunarDagger, Tier.S),//Lunar - Shaped Glass 
-            new(DLC1Content.Items.RandomlyLunar, Tier.S),//Lunar - Eulogy Zero 
-            new(RoR2Content.Items.FocusConvergence, Tier.S),//Lunar - Focused Convergence 
-            new(RoR2Content.Items.LunarBadLuck, Tier.S),//Lunar - Purity 
-            new(RoR2Content.Items.RepeatHeal, Tier.S),//Lunar - Corpsebloom 
-            new(RoR2Content.Items.LunarUtilityReplacement, Tier.S),//Lunar - Strides of Heresy 
+            new(DLC1Content.Items.RandomlyLunar, Tier.A),//Lunar - Eulogy Zero 
+            new(RoR2Content.Items.FocusConvergence, Tier.B),//Lunar - Focused Convergence 
+            new(RoR2Content.Items.LunarBadLuck, Tier.B),//Lunar - Purity 
+            new(RoR2Content.Items.LunarUtilityReplacement, Tier.B),//Lunar - Strides of Heresy 
 
-            new(DLC1Content.Items.LunarSun, Tier.S),//Lunar - Egocentrism 
-            new(RoR2Content.Items.LunarPrimaryReplacement, Tier.S),//Lunar - Visions of Heresy 
-            new(RoR2Content.Items.LunarSecondaryReplacement, Tier.S),//Lunar - Hooks of Heresy 
-            new(RoR2Content.Items.GoldOnHit, Tier.S),//Lunar - Brittle Crown 
-            new(RoR2Content.Items.RandomDamageZone, Tier.S),//Lunar - Mercurial Rachis 
-            new(RoR2Content.Items.LunarTrinket, Tier.S),//Lunar - Beads of Fealty 
-            new(RoR2Content.Items.MonstersOnShrineUse, Tier.S),//Lunar - Defiant Gouge 
-            new(DLC1Content.Items.HalfAttackSpeedHalfCooldowns, Tier.S),//Lunar - Light Flux Pauldron 
-            new(DLC1Content.Items.HalfSpeedDoubleHealth, Tier.S),//Lunar - Stone Flux Pauldron 
+            new(DLC1Content.Items.LunarSun, Tier.B),//Lunar - Egocentrism 
+            new(RoR2Content.Items.LunarPrimaryReplacement, Tier.B),//Lunar - Visions of Heresy 
+            new(RoR2Content.Items.LunarSecondaryReplacement, Tier.B),//Lunar - Hooks of Heresy 
+            new(RoR2Content.Items.RepeatHeal, Tier.C),//Lunar - Corpsebloom 
+            new(RoR2Content.Items.GoldOnHit, Tier.C),//Lunar - Brittle Crown 
+            new(RoR2Content.Items.RandomDamageZone, Tier.C),//Lunar - Mercurial Rachis 
+            new(RoR2Content.Items.LunarTrinket, Tier.D),//Lunar - Beads of Fealty 
+            new(RoR2Content.Items.MonstersOnShrineUse, Tier.D),//Lunar - Defiant Gouge 
+            new(DLC1Content.Items.HalfAttackSpeedHalfCooldowns, Tier.F),//Lunar - Light Flux Pauldron 
+            new(DLC1Content.Items.HalfSpeedDoubleHealth, Tier.F),//Lunar - Stone Flux Pauldron 
 
             // Yellow - https://www.youtube.com/watch?v=k6SireTv8t4
             new(RoR2Content.Items.LightningStrikeOnHit, Tier.S),//Boss - Charged Perforator 
@@ -140,7 +135,6 @@ public class DefaultTierList
             new(RoR2Content.Items.Pearl, Tier.D),//Boss - Pearl 
             new(RoR2Content.Items.Knurl, Tier.D),//Boss - Titanic Knurl 
             new(DLC1Content.Items.MinorConstructOnKill, Tier.F),//Boss - Defense Nucleus 
-
 
             // Red - https://www.youtube.com/watch?v=T7FwqTjO39s
             new(RoR2Content.Items.FallBoots, Tier.S),//Red - H3AD-5T v2 
@@ -215,9 +209,7 @@ public class DefaultTierList
 
         List<Rank<EquipmentDef>> equipements = new List<Rank<EquipmentDef>>
         {
-            
             // Equipment - https://www.youtube.com/watch?v=GcO0QrzSPb4
-            
             new(RoR2Content.Equipment.Tonic, Tier.S),//Lunar - Spinel Tonic 
             new(RoR2Content.Equipment.Recycle, Tier.S),//Normal - Recycler 
             new(DLC1Content.Equipment.BossHunter, Tier.S),//Normal - Trophy Hunter's Tricorn 

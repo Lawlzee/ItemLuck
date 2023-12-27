@@ -1,4 +1,6 @@
-﻿namespace ItemLuck;
+﻿using UnityEngine;
+
+namespace ItemLuck;
 
 public enum Tier
 {
@@ -23,8 +25,16 @@ public static class TierExtensions
             Tier.C => -0.2f,
             Tier.D => -0.6f,
             Tier.F => -1,
-            Tier.Unspecified => 1f
+            _ => 0f
         };
+    }
+
+    public static float ApplyItemLuck(this Tier itemTier, float currentWeigth)
+    {
+        float multiplier = itemTier.ToMultiplier();
+
+        const float c = -0.8f;
+        return (2 * currentWeigth) / (1 + Mathf.Exp(multiplier * ItemLuckPlugin.ItemLuck.Value * c));
     }
 }
 

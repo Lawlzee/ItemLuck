@@ -37,6 +37,8 @@ public static class Hooks
         On.RoR2.InfiniteTowerWaveController.DropRewards += InfiniteTowerWaveController_DropRewards;
         On.RoR2.ArenaMonsterItemDropTable.GenerateUniqueDropsPreReplacement += ArenaMonsterItemDropTable_GenerateUniqueDropsPreReplacement;
         On.RoR2.ArenaMissionController.EndRound += ArenaMissionController_EndRound;
+
+        On.RoR2.EquipmentSlot.FireRecycle += EquipmentSlot_FireRecycle;
     }
 
     private static void ItemCatalog_Init(On.RoR2.ItemCatalog.orig_Init orig)
@@ -130,9 +132,9 @@ public static class Hooks
             dropTable.selector.Clear();
 
             List<PickupIndex> lunarCoin = new List<PickupIndex>
-                {
-                    PickupCatalog.FindPickupIndex(RoR2Content.MiscPickups.LunarCoin.miscPickupIndex)
-                };
+            {
+                PickupCatalog.FindPickupIndex(RoR2Content.MiscPickups.LunarCoin.miscPickupIndex)
+            };
 
             dropTable.Add(Run.instance.availableTier1DropList, chestBehavior.tier1Chance / Run.instance.availableTier1DropList.Count);
             dropTable.Add(Run.instance.availableTier2DropList, chestBehavior.tier2Chance / Run.instance.availableTier2DropList.Count);
@@ -246,40 +248,77 @@ public static class Hooks
         orig(self);
     }
 
+    private static bool EquipmentSlot_FireRecycle(On.RoR2.EquipmentSlot.orig_FireRecycle orig, EquipmentSlot self)
+    {
+        if (!ItemLuckPlugin.UpdateLuckEnabled)
+        {
+            return orig(self);
+        }
+
+        self.UpdateTargets(RoR2Content.Equipment.Recycle.equipmentIndex, false);
+        GenericPickupController pickupController = self.currentTarget.pickupController;
+        if (!pickupController || pickupController.Recycled)
+        {
+            return false;
+        }
+
+        PickupIndex initialPickupIndex = pickupController.pickupIndex;
+        self.subcooldownTimer = 0.2f;
+        List<PickupIndex> pickupIndexes = PickupTransmutationManager.GetAvailableGroupFromPickupIndex(pickupController.pickupIndex).Where(pickupIndex => pickupIndex != initialPickupIndex).ToList();
+        if (pickupIndexes == null || pickupIndexes.Count == 0)
+        {
+            return false;
+        }
+
+        WeightedSelection<PickupIndex> selector = new WeightedSelection<PickupIndex>(pickupIndexes.Count);
+        foreach (var pickup in pickupIndexes)
+        {
+            selector.AddChoice(pickup, 1);
+        }
+
+        ReplaceSelector(selector, nameof(EquipmentSlot_FireRecycle), null);
+
+        pickupController.NetworkpickupIndex = selector.Evaluate(Run.instance.treasureRng.nextNormalizedFloat);
+        EffectManager.SimpleEffect(LegacyResourcesAPI.Load<GameObject>("Prefabs/Effects/OmniEffect/OmniRecycleEffect"), pickupController.pickupDisplay.transform.position, Quaternion.identity, true);
+        pickupController.NetworkRecycled = true;
+        self.InvalidateCurrentTarget();
+        return true;
+    }
+
     private static IDisposable ReplaceDropTable(PickupDropTable dropTable, string caller)
     {
         if (dropTable is BasicPickupDropTable basicDropTable)
         {
             IDisposable disposable = CreateSelectorCopy(basicDropTable.selector, x => basicDropTable.selector = x);
-            ReplaceDropTableSelector(basicDropTable.selector);
+            ReplaceSelector(basicDropTable.selector, caller, dropTable);
             return disposable;
         }
 
         if (dropTable is ExplicitPickupDropTable explicitDropTable)
         {
             IDisposable disposable = CreateSelectorCopy(explicitDropTable.weightedSelection, x => explicitDropTable.weightedSelection = x);
-            ReplaceDropTableSelector(explicitDropTable.weightedSelection);
+            ReplaceSelector(explicitDropTable.weightedSelection, caller, dropTable);
             return disposable;
         }
 
         if (dropTable is FreeChestDropTable freeChestDropTable)
         {
             IDisposable disposable = CreateSelectorCopy(freeChestDropTable.selector, x => freeChestDropTable.selector = x);
-            ReplaceDropTableSelector(freeChestDropTable.selector);
+            ReplaceSelector(freeChestDropTable.selector, caller, dropTable);
             return disposable;
         }
 
         if (dropTable is DoppelgangerDropTable doppelgangerDropTable)
         {
             IDisposable disposable = CreateSelectorCopy(doppelgangerDropTable.selector, x => doppelgangerDropTable.selector = x);
-            ReplaceDropTableSelector(doppelgangerDropTable.selector);
+            ReplaceSelector(doppelgangerDropTable.selector, caller, dropTable);
             return disposable;
         }
 
         if (dropTable is ArenaMonsterItemDropTable arenaMonsterItemDropTable)
         {
             IDisposable disposable = CreateSelectorCopy(arenaMonsterItemDropTable.selector, x => arenaMonsterItemDropTable.selector = x);
-            ReplaceDropTableSelector(arenaMonsterItemDropTable.selector);
+            ReplaceSelector(arenaMonsterItemDropTable.selector, caller, dropTable);
             return disposable;
         }
 
@@ -287,29 +326,27 @@ public static class Hooks
         Log.Warning($"{caller} dropTable is of type {dropTable?.GetType().FullName ?? "null"}");
 
         return Disposable.Empty;
+    }
 
-        void ReplaceDropTableSelector(WeightedSelection<PickupIndex> selector)
+    private static void ReplaceSelector(WeightedSelection<PickupIndex> selector, string caller, PickupDropTable dropTable)
+    {
+        for (int i = 0; i < selector.Count; i++)
         {
-            float itemLuckValue = ItemLuckPlugin.ItemLuck.Value;
+            ref var choice = ref selector.choices[i];
 
-            for (int i = 0; i < selector.Count; i++)
-            {
-                ref var choice = ref selector.choices[i];
+            float oldWeight = choice.weight;
 
-                float oldWeight = choice.weight;
+            Tier tier = ItemLuckPlugin.TierList.GetTier(choice.value.itemIndex)
+                ?? ItemLuckPlugin.TierList.GetTier(choice.value.equipmentIndex)
+                ?? Tier.Unspecified;
 
-                Tier tier = ItemLuckPlugin.TierList.GetTier(choice.value.itemIndex)
-                    ?? ItemLuckPlugin.TierList.GetTier(choice.value.equipmentIndex)
-                    ?? Tier.Unspecified;
+            float newWeigth = tier.ApplyItemLuck(choice.weight);
 
-                float newWeigth = tier.ApplyItemLuck(choice.weight);
-
-                selector.ModifyChoiceWeight(i, newWeigth);
-                Log.Debug($"{Language.GetString(choice.value.pickupDef.nameToken)} weight changed from {oldWeight} to {newWeigth}");
-            }
-
-            Log.Debug($"{caller} {dropTable.GetType().Name} ({dropTable.name}) replaced");
+            selector.ModifyChoiceWeight(i, newWeigth);
+            Log.Debug($"{Language.GetString(choice.value.pickupDef.nameToken)} weight changed from {oldWeight} to {newWeigth}");
         }
+
+        Log.Debug($"{caller} {dropTable?.GetType()?.Name} ({dropTable?.name}) replaced");
     }
 
     private static IDisposable CreateSelectorCopy(WeightedSelection<PickupIndex> selector, Action<WeightedSelection<PickupIndex>> setSelector)

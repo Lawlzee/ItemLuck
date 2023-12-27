@@ -26,7 +26,6 @@ namespace ItemLuck
 
         //private ItemDef _itemLuckItem;
         //private ItemDef _voidItemLuckItem;
-        //todo: recycler
 
         public static bool UpdateLuckEnabled => ModEnabled.Value && ItemLuck.Value != 0;
 

@@ -2,12 +2,9 @@ using BepInEx;
 using BepInEx.Configuration;
 using RiskOfOptions.Options;
 using RiskOfOptions;
-using RoR2;
 using UnityEngine;
 using System.IO;
 using RiskOfOptions.OptionConfigs;
-using R2API;
-using RoR2.ExpansionManagement;
 
 namespace ItemLuck
 {
@@ -18,7 +15,7 @@ namespace ItemLuck
         public const string PluginGUID = "Lawlzee.ItemLuck";
         public const string PluginAuthor = "Lawlzee";
         public const string PluginName = "ItemLuck";
-        public const string PluginVersion = "1.0.0";
+        public const string PluginVersion = "1.0.1";
 
         public static ConfigEntry<bool> ModEnabled;
         public static ConfigEntry<float> ItemLuck;
@@ -38,9 +35,9 @@ namespace ItemLuck
             ModEnabled = Config.Bind("Configuration", "Mod enabled", true, "Mod enabled");
             ModSettingsManager.AddOption(new CheckBoxOption(ModEnabled));
 
-            ItemLuck = Config.Bind("Configuration", "Item luck", 0f, "todo");
+            ItemLuck = Config.Bind("Configuration", "Item luck", 2f, "Controls the item luck");
 
-            UpdatableStepSliderOption option = new UpdatableStepSliderOption(ItemLuck, new StepSliderConfig() { min = -5, max = 5, increment = 0.05f, formatString = "{0:+0.##;-0.##;0.##}" });
+            UpdatableStepSliderOption option = new UpdatableStepSliderOption(ItemLuck, new StepSliderConfig() { min = -8, max = 8, increment = 0.05f, formatString = "{0:+0.##;-0.##;0.##}" });
             ModSettingsManager.AddOption(option);
 
             ItemLuck.SettingChanged += (_, _) =>
@@ -79,45 +76,45 @@ namespace ItemLuck
             //    expansion: ExpansionCatalog.expansionDefs.FirstOrDefault(def => def.nameToken == "DLC1_NAME"));
         }
 
-        private ItemDef CreateLuckItem(
-            string tokenName,
-            string model,
-            string texture,
-            ItemTier itemTier,
-            string name,
-            string pickup,
-            string description,
-            string lore,
-            ExpansionDef expansion)
-        {
-            var texture2d = LoadTexture(texture);
-            var sprite = Sprite.Create(texture2d, new Rect(0, 0, texture2d.width, texture2d.height), new Vector2(0, 0));
-
-
-            var prefab = ItemModelFactory.Create(LoadTexture(model), tokenName, 1 / 25f, 0.6f);
-            DontDestroyOnLoad(prefab);
-
-            var itemDef = ScriptableObject.CreateInstance<ItemDef>();
-            itemDef.name = "ITEM_" + tokenName;
-            itemDef.nameToken = "ITEM_" + tokenName + "_NAME";
-            itemDef.pickupToken = "ITEM_" + tokenName + "_PICKUP";
-            itemDef.descriptionToken = "ITEM_" + tokenName + "_DESCRIPTION";
-            itemDef.loreToken = "ITEM_" + tokenName + "_LORE";
-            itemDef.pickupModelPrefab = prefab;
-            itemDef.pickupIconSprite = sprite;
-            itemDef.hidden = false;
-            itemDef.deprecatedTier = itemTier;
-            itemDef.requiredExpansion = expansion;
-
-            LanguageAPI.Add(itemDef.nameToken, name);
-            LanguageAPI.Add(itemDef.pickupToken, pickup);
-            LanguageAPI.Add(itemDef.descriptionToken, description);
-            LanguageAPI.Add(itemDef.loreToken, lore);
-
-            ItemAPI.Add(new CustomItem(itemDef, default(ItemDisplayRule[])));
-
-            return itemDef;
-        }
+        //private ItemDef CreateLuckItem(
+        //    string tokenName,
+        //    string model,
+        //    string texture,
+        //    ItemTier itemTier,
+        //    string name,
+        //    string pickup,
+        //    string description,
+        //    string lore,
+        //    ExpansionDef expansion)
+        //{
+        //    var texture2d = LoadTexture(texture);
+        //    var sprite = Sprite.Create(texture2d, new Rect(0, 0, texture2d.width, texture2d.height), new Vector2(0, 0));
+        //
+        //
+        //    var prefab = ItemModelFactory.Create(LoadTexture(model), tokenName, 1 / 25f, 0.6f);
+        //    DontDestroyOnLoad(prefab);
+        //
+        //    var itemDef = ScriptableObject.CreateInstance<ItemDef>();
+        //    itemDef.name = "ITEM_" + tokenName;
+        //    itemDef.nameToken = "ITEM_" + tokenName + "_NAME";
+        //    itemDef.pickupToken = "ITEM_" + tokenName + "_PICKUP";
+        //    itemDef.descriptionToken = "ITEM_" + tokenName + "_DESCRIPTION";
+        //    itemDef.loreToken = "ITEM_" + tokenName + "_LORE";
+        //    itemDef.pickupModelPrefab = prefab;
+        //    itemDef.pickupIconSprite = sprite;
+        //    itemDef.hidden = false;
+        //    itemDef.deprecatedTier = itemTier;
+        //    itemDef.requiredExpansion = expansion;
+        //
+        //    LanguageAPI.Add(itemDef.nameToken, name);
+        //    LanguageAPI.Add(itemDef.pickupToken, pickup);
+        //    LanguageAPI.Add(itemDef.descriptionToken, description);
+        //    LanguageAPI.Add(itemDef.loreToken, lore);
+        //
+        //    ItemAPI.Add(new CustomItem(itemDef, default(ItemDisplayRule[])));
+        //
+        //    return itemDef;
+        //}
 
         private Texture2D LoadTexture(string name)
         {

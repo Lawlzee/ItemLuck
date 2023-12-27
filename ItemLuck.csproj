@@ -5,7 +5,7 @@
     <LangVersion>preview</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <OutDir Condition="'$(Configuration)' == 'Debug'">C:\Users\Lawlzee\AppData\Roaming\r2modmanPlus-local\RiskOfRain2\profiles\ModDev\BepInEx\plugins\ItemLuck</OutDir>
-    <OutDir Condition="'$(Configuration)' == 'Release'">bin/Release/ScrappyChests</OutDir>
+    <OutDir Condition="'$(Configuration)' == 'Release'">bin/Release/ItemLuck</OutDir>
     <DebugSymbols>false</DebugSymbols>
     <DebugType>None</DebugType>
     <NoWarn>Publicizer001</NoWarn>
@@ -18,15 +18,19 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="ItemModelFactory.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="BepInEx.Analyzers" Version="1.0.*">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="BepInEx.Core" Version="5.4.21" />
     <PackageReference Include="RiskOfRain2.GameLibs" Version="1.2.4-r.0" />
-    <PackageReference Include="RiskofThunder-R2API_Items" Version="1.0.3" />
-    <PackageReference Include="RiskofThunder-R2API_Language" Version="1.0.1" />
-    <PackageReference Include="RiskofThunder-R2API_Prefab" Version="1.0.3" />
+    <!-->PackageReference Include="RiskofThunder-R2API_Items" Version="1.0.3" /-->
+    <!--PackageReference Include="RiskofThunder-R2API_Language" Version="1.0.1" /-->
+    <!--PackageReference Include="RiskofThunder-R2API_Prefab" Version="1.0.3" /-->
     <PackageReference Include="Rune580-Risk_Of_Options" Version="2.7.0" />
     <PackageReference Include="UnityEngine.Modules" Version="2019.4.26" />
     <PackageReference Include="MMHOOK.RoR2" Version="2022.9.20">
@@ -85,25 +89,10 @@
     <Content Include="CHANGELOG.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Update="BorderedFeather.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="BorderedRabbitFoot.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Feather.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Update="icon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="manifest.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="RabbitFoot.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Sword.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <Content Include="README.md">
